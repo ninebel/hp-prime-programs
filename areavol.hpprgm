@@ -1,0 +1,79 @@
+EXPORT areavol()
+BEGIN
+
+INPUT( {{S, {"Rectangle","Triangular prism", "Cylinder", "Cone", "Sphere"} }}, "Areas of volumes" ,"Shape: ");
+
+// ================================================================
+//                             Rectangle
+// ================================================================
+IF S == 1 THEN
+
+  LOCAL Area = 0; 
+  LOCAL l = 0; LOCAL w = 0; LOCAL h = 0;
+  INPUT(l, "Rectangle", "Length: ", "");
+  INPUT(w, "Rectangle", "Width: ", "");
+  INPUT(h, "Rectangle", "Height: ", "");
+  Area := 2*(l*w + l*h + w*h);
+  MSGBOX("Area: " + Area + " a.u");
+  RETURN (Area);
+  END;
+
+// ================================================================
+//                         Triangular prism
+// ================================================================
+IF S == 2 THEN
+
+  LOCAL Area = 0; 
+  LOCAL l = 0; LOCAL b = 0; LOCAL h = 0;
+  INPUT(l, "Triangular prism", "Length: ", "");
+  INPUT(b, "Triangular prism", "Base: ", "");
+  INPUT(h, "Triangular prism", "Height: ", "");
+  Area := b*h + l*b + l*(h^2 + (b/2)^2)^(1/2);
+  MSGBOX("Area: " + Area + " a.u");
+  RETURN (Area);
+  END;
+
+// ================================================================
+//                             Cylinder
+// ================================================================
+IF S == 3 THEN
+
+  LOCAL Area = 0; 
+  LOCAL r = 0; LOCAL h = 0;
+  INPUT(r, "Cylinder", "Radius: ", "");
+  INPUT(h, "Cylinder", "Height: ", "");
+  Area := 2*3.141592653589793*(r^2 + r*h);
+  MSGBOX("Area: " + Area + " a.u");
+  RETURN (Area);
+  END;
+
+// ================================================================
+//                             Cone
+// ================================================================
+IF S == 4 THEN
+
+  LOCAL Area = 0; 
+  LOCAL r = 0; LOCAL h = 0;
+  INPUT(r, "Cone", "Radius: ", "");
+  INPUT(h, "Cone", "Height: ", "");
+  Area := 3.141592653589793*(r^2 + r*(h^2 + (r/2)^2)^(1/2));
+  MSGBOX("Area: " + Area + " a.u");
+  RETURN (Area);
+  END;
+
+// ================================================================
+//                             Sphere
+// ================================================================
+IF S == 5 THEN
+
+  LOCAL Area = 0; 
+  LOCAL r = 0; LOCAL h = 0;
+  INPUT(r, "Sphere", "Radius: ", "");
+  Area := 4*3.141592653589793*r^2;
+  ROUND(Area, 3);
+  MSGBOX("Area: " + Area + " a.u");
+  RETURN (Area);
+  END;
+
+
+END;

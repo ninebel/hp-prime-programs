@@ -1,0 +1,205 @@
+fexp();
+ftrig();
+fcoefa();
+fcoefb();
+fcoefc();
+
+// -----------------------------------------------------------------------------------------------
+
+EXPORT ftrig(f, period, limit1, limit2)
+BEGIN
+
+LOCAL cmdA := "a(k):=" + fcoefa (f , period);
+LOCAL cmdB := "b(k):=" + fcoefb (f , period);
+CAS(CAS(cmdA));
+CAS(CAS(cmdB));
+
+LOCAL k, a , b, cmdA2, cmdB2, fourier;
+
+PRINT("----------");
+
+FOR k FROM limit1 TO limit2 DO
+
+    cmdA2 := "a(" + k +  " )";
+    cmdB2 :=  "b(" + k + " )";
+
+    IF k == 0 THEN
+
+        a := (2/period) * CAS.int(f , "t" , -period/2 , period/2);
+        b := 0;
+
+    ELSE
+
+        a  := CAS(CAS(cmdA2));
+        b := CAS(CAS(cmdB2));
+
+    END;
+
+    a := CAS.round(CAS.approx(a) , 3);
+    b := CAS.round(CAS.approx(b) , 3);
+
+    PRINT("A" + k + " = " + a);
+    PRINT("B" + k + " = " + b);
+
+    PRINT("----------");
+
+END;
+
+RETURN;
+
+END;
+
+// -----------------------------------------------------------------------------------------------
+
+EXPORT fexp(f, period, limit1, limit2)
+BEGIN
+
+LOCAL cmd := "c(k) :=" + fcoefc (f , period);
+CAS(CAS(cmd));
+
+LOCAL k, c, ang, cmd2, fourier, w := 2*CAS.pi / period;
+
+PRINT("----------");
+
+FOR k FROM limit1 TO limit2 DO
+
+    cmd2 := "c(" + k +  " )";
+
+    IF k == 0 THEN
+
+        c := (1/period) * CAS.int(f , "t" , -period/2 , period/2);
+
+    ELSE
+
+        c  := CAS(CAS(cmd2));
+
+    END;
+
+    ang := CAS.ARG(c);
+
+    c := CAS.round(CAS.approx(c) , 3);
+    ang := CAS.round(CAS.approx(ang) , 2);
+
+    PRINT("C" + k + " = " + c);
+    PRINT("θ" + k + " = " + ang);
+
+    PRINT("----------");
+
+END;
+
+RETURN;
+
+END;
+
+// -----------------------------------------------------------------------------------------------
+
+EXPORT fhar(f, period, limit1, limit2)
+BEGIN
+
+LOCAL cmdA := "a(k):=" + fcoefa (f , period);
+LOCAL cmdB := "b(k):=" + fcoefb (f , period);
+CAS(CAS(cmdA));
+CAS(CAS(cmdB));
+
+LOCAL k, a , b, c, cmdA2, cmdB2, fourier;
+
+PRINT("----------");
+
+FOR k FROM limit1 TO limit2 DO
+
+    cmdA2 := "a(" + k +  " )";
+    cmdB2 :=  "b(" + k + " )";
+
+    IF k == 0 THEN
+
+        a := (2/period) * CAS.int(f , "t" , -period/2 , period/2);
+        b := 0;
+
+    ELSE
+
+        a  := CAS(CAS(cmdA2));
+        b := CAS(CAS(cmdB2));
+
+    END;
+
+    c := CAS(CAS("(" + a + "^2 + " + b + "^2)^(1/2)"));
+    c := CAS.round(CAS.approx(c) , 3);
+
+    a :=CAS.approx(a);
+    b := CAS.approx(b);
+
+
+    PRINT("C" + k + " = " + c);
+
+    IF b == 0 THEN
+
+        PRINT("θ" + k + " = TAN(a/0)");
+
+    ELSE
+
+       PRINT("θ" + k + " = " + CAS.TAN(a/b));
+
+    END;
+
+    PRINT("----------");
+
+END;
+
+RETURN;
+
+END;
+
+// -----------------------------------------------------------------------------------------------
+
+EXPORT fcoefa(f, period)
+BEGIN
+
+LOCAL ak;
+
+LOCAL w := 2*CAS.pi / period;
+
+LOCAL a := CAS(CAS("cos(" + w + "*k*t)"));
+ak := (2/period) * CAS.int(f*a  , "t", -period/2, period/2); // Calculating Ak
+
+ak := normal(ak);
+
+RETURN (ak);
+END;
+
+// -----------------------------------------------------------------------------------------------
+
+
+EXPORT fcoefb(f, period)
+BEGIN
+
+LOCAL bk;
+
+LOCAL w := 2*CAS.pi / period;
+
+LOCAL b := CAS(CAS("sin(" + w + "*k*t)"));
+bk := (2/period)*CAS.int(f*b  , "t", -period/2, period/2); // Calculating Bk
+
+bk := normal(bk);
+
+RETURN (bk);
+END;
+
+// -----------------------------------------------------------------------------------------------
+
+EXPORT fcoefc(f, period)
+BEGIN
+
+LOCAL w := 2*CAS.pi / period;
+
+LOCAL ck;
+
+LOCAL c := CAS(CAS("e**(-(-1)^(-1/2)*k*t*" + w + ")"));
+ck := (1/period) * CAS.int(f*c  , "t", -period/2, period/2); // Calculating Ck
+
+ck := normal(ck);
+
+PRINT("Ck: " + ck);
+
+RETURN (ck);
+
+END;
